@@ -1,0 +1,366 @@
+﻿@{
+    ViewBag.UserInfo = (FetchtoApp.Models.UserInfo)Session["UserInfo"];
+ 
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var url = window.location;
+        var element = jQuery('ul.sidebar-menu a').filter(function () {
+            return this.href == url || url.href.indexOf(this.href) == 0;
+        });
+        jQuery(element).parentsUntil('ul.sidebar-menu', 'li').addClass('active');
+    });
+</script>
+<header class="main-header">
+    <!-- Logo -->
+
+    <a href="~/Home/dashboard" class="logo" style="background-color: #222d32;">
+        <center>
+            <img class="img-responsive" style="width:60%;height: 100%;" src="~/asset2/media/Fetchto_01.png">
+        </center>
+    </a>
+
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top" style="background-color: white;">
+        <!-- Sidebar toggle button-->
+        <a href="~/asset1/#" style="background-color:#06d79c; " class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu" style="background-color:#06d79c; ">
+                    <a href="~/asset1/#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="~/uploads/profile/avatar.jpg" class="user-image" alt="User Image">
+                        <span class="hidden-xs" style="color:white;">@ViewBag.UserInfo.username</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header" style="background-color:#06d79c; ">
+                            <img src="~/uploads/profile//avatar.jpg" class="img-circle" alt="User Image">
+                            <p style="color:white;">
+                                @ViewBag.UserInfo.username
+                            </p>
+                        </li>
+
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="~/Dashboard/ProfileInfo" class="btn btn-default btn-flat">Profile</a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="~/Dashboard/signout" class="btn btn-default btn-flat">Sign out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Control Sidebar Toggle Button -->
+
+            </ul>
+        </div>
+    </nav>
+</header>
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <br>
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel
+        <div class="user-panel">
+          <div class="pull-left image">
+            <img src="~/uploads/profile/<?php echo $this->Main_model->profile_pic($this->session->userdata('userid')); ?>" class="img-circle" alt="User Image">
+          </div>
+          <div class="pull-left info">
+            <p><?php echo $this->Main_model->user_name($this->session->userdata('userid')); ?></p>
+
+          </div>
+        </div>-->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+
+
+            @if (ViewBag.UserInfo.role == "2")
+            {
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-paper-plane-o"></i> <span>Create shipments</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="~/Shipment/NewShipment"><i class="fa fa-cube"></i>Single</a></li>
+                        <li class=""><a href="~/Home/bulk_shipment_upload"><i class="fa fa-cubes"></i>Multiple</a></li>
+                        <li class=""><a href="~/Home/shipment?limit=100&offset=0&shipment_type=null&logistics=null&pickup_pincode=&delivery_city=&delivery_state=&product=&dropship=null"><i class="fa fa-info-circle"></i>View All</a></li>
+
+                    </ul>
+                </li>
+            }
+
+
+            @if (ViewBag.UserInfo.role == "1")
+            {
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Zipcode Management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <!--
+                        <li><a href="#"><i class="fa fa-circle-o"></i>Create New zipcode</a></li>
+                        <li class=""><a href="~/Home/upload_zipcode"><i class="fa fa-circle-o"></i>Upload Bulk zipcode</a></li>-->
+                        <li class=""><a href="~/Home/view_all_zipcode?limit=30&offset=0&city_type=&city=&state="><i class="fa fa-circle-o"></i>View All zipcode</a></li>
+                    </ul>
+                </li>
+            }
+
+            @if (ViewBag.UserInfo.role == "1")
+            {
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Awb management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/upload_awb"><i class="fa fa-circle-o"></i>Upload Bulk Awb</a></li>
+                        <li class=""><a href="~/Home/view_all_awb?limit=&offset="><i class="fa fa-circle-o"></i>View All Awb</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Warehouse Management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/AllWarehouse?limit=100&offset=0&status=pending"><i class="fa fa-circle-o"></i>New Warehouse</a></li>
+                        <li class=""><a href="~/Home/AllWarehouse?limit=100&offset=0&status=approved"><i class="fa fa-circle-o"></i>Approved Warehouse</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Pickup management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/AllPickups?limit=100&offset=0&status=pending"><i class="fa fa-circle-o"></i>Pending Pickups</a></li>
+                        <li class=""><a href="~/Home/AllPickups?limit=100&offset=0&status=scheduled"><i class="fa fa-circle-o"></i>Scheduled Pickups</a></li>
+                    </ul>
+                </li>
+            }
+
+
+            @if (ViewBag.UserInfo.role == "1")
+            {
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Weight update</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/weight_upload"><i class="fa fa-circle-o"></i>Weight upload</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Status management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/upload_status"><i class="fa fa-circle-o"></i>Status upload</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>COD management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/BillingControl/uploadcod"><i class="fa fa-circle-o"></i>COD upload</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Users management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/users_management?limit=100&offset=0"><i class="fa fa-circle-o"></i>All users</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-book"></i> <span>Reports</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/all_invoice_report?limit=&offset="><i class="fa fa-circle-o"></i>Invoice Report</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="~/BillingControl/billing">
+                        <i class="fa fa-money"></i> <span>Billing </span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (ViewBag.UserInfo.role == "2")
+            {
+                <li>
+                    <a href="~/Home/lable_generation">
+                        <i class="fa fa-print"></i> <span>Print Label</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-bullhorn"></i> <span>Pickup management</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li class=""><a href="~/Home/schedule_pickup"><i class="fa fa-map-marker"></i>Schedule pickup</a></li>
+                        <li class=""><a href="~/Home/view_all_schedules?limit=30&offset=0"><i class="fa fa-info-circle"></i>View All Schedules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="~/Home/manage_shipments/">
+                        <i class="fa fa-tasks"></i> <span>Manage shipments</span>
+                        <span class="pull-right-container">
+                            <span class="label label-danger pull-right">10</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Home/invoice_report?limit=20&offset=0&payment_type=true&status=delivered">
+                        <i class="fa fa-money"></i> <span>COD Remittance </span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Home/rto_report?limit=20&offset=0&payment_type=&status=returned">
+                        <i class="fa fa-truck"></i> <span>RTO</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Home/weightupdate_report?limit=20&offset=0&payment_type=&status=&billing_weight=0">
+                        <i class="fa fa-balance-scale"></i> <span>Weight Update</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Home/ledger">
+                        <i class="fa  fa-book"></i> <span>Ledger</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+
+            }
+
+            @if (ViewBag.UserInfo.role == "1")
+            {
+                <li>
+                    <a href="~/Home/bill_settings/delhivery">
+                        <i class="fa fa-gear"></i> <span>Bill settings</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+            }
+
+            @if (ViewBag.UserInfo.role == "2")
+            {
+                <li>
+                    <a href="~/Home/wallet">
+                        <i class="fa fa-rupee"></i> <span>Fetchto Wallet</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-gear"></i> <span>Settings</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li><a href="~/Home/Acc_settings"><i class="fa fa-caret-right"></i>Account settings</a></li>
+                        <li><a href="~/Home/warehouse_settings"><i class="fa fa-caret-right"></i>Warehouse settings</a></li>
+                        <li class=""><a href="~/Home/payment_settings"><i class="fa fa-caret-right"></i>Payment settings</a></li>
+
+                        <li class=""><a href="~/Home/other_settings"><i class="fa fa-caret-right"></i>Other settings</a></li>
+                    </ul>
+                </li>
+
+            }
+
+            @if (ViewBag.UserInfo.role == "1")
+            {
+                <li>
+                    <a href="#">
+                        <i class="fa fa-users"></i> <span>Users</span>
+                        <span class="pull-right-container">
+
+                        </span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

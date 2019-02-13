@@ -1,0 +1,577 @@
+﻿@model FetchtoApp.Models.ProfileModel
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewBag.Title = "Fetchto - New Shipment";
+}
+@{
+    ViewBag.UserInfo = (FetchtoApp.Models.UserInfo)Session["UserInfo"];
+}
+<link rel="stylesheet" href="~/asset1/bower_components/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="~/asset1/dist/css/skins/_all-skins.min.css">
+<link href="~/Content/fetchto/Common.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>
+
+<div class="wrapper">
+    <!-- Content Wrapper.. Contains page content -->
+    <div class="content-wrapper">
+        <style type="text/css">
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+                .switch input {
+                    display: none;
+                }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 26px;
+                    width: 26px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                }
+
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+                .slider.round:before {
+                    border-radius: 50%;
+                }
+        </style>
+        <style type="text/css">
+
+            .table-hover tbody tr:hover td {
+                background: #3c8dbc;
+                color: white;
+            }
+        </style>
+        <section class="content-header">
+            <h1>
+                Profile
+                <small></small>
+            </h1>
+
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            @using (Html.BeginForm("saveprofile", "Dashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <div class="col-md-3">
+                        <!-- Profile Image -->
+                        <div class="box box-primary">
+                            <div class="box-body box-profile">
+                                <div class="picture">
+                                    <img class="picture-src" id="profilepreview" src="@Url.Content(Model != null && Model.profileimagefile != null ? "/images/" + Model.profileimagefile.FileName : "/images")" alt="User profile picture">
+                                    @*<input id="profileupload" name="profileupload" type="file" required>*@
+                                    @Html.TextBoxFor(Model => Model.profileimagefile, new { type = "file" })
+                                </div>
+                                <h3 class="profile-username text-center">srinikg</h3>
+                                @*<div class="picture">
+                                        <img class="profile-user-img img-responsive img-circle" src="https://lh3.googleusercontent.com/LfmMVU71g-HKXTCP_QWlDOemmWg4Dn1rJjxeEsZKMNaQprgunDTtEuzmcwUBgupKQVTuP0vczT9bH32ywaF7h68mF-osUSBAeM6MxyhvJhG6HKZMTYjgEv3WkWCfLB7czfODidNQPdja99HMb4qhCY1uFS8X0OQOVGeuhdHy8ln7eyr-6MnkCcy64wl6S_S6ep9j7aJIIopZ9wxk7Iqm-gFjmBtg6KJVkBD0IA6BnS-XlIVpbqL5LYi62elCrbDgiaD6Oe8uluucbYeL1i9kgr4c1b_NBSNe6zFwj7vrju4Zdbax-GPHmiuirf2h86eKdRl7A5h8PXGrCDNIYMID-J7_KuHKqaM-I7W5yI00QDpG9x5q5xOQMgCy1bbu3St1paqt9KHrvNS_SCx-QJgBTOIWW6T0DHVlvV_9YF5UZpN7aV5a79xvN1Gdrc7spvSs82v6gta8AJHCgzNSWQw5QUR8EN_-cTPF6S-vifLa2KtRdRAV7q-CQvhMrbBCaEYY73bQcPZFd9XE7HIbHXwXYA=s200-no" class="picture-src" id="wizardPicturePreview" title="">
+                                        <input type="file" id="wizard-picture" class="">
+                                    </div>*@
+
+                                <ul class="list-group list-group-unbordered">
+                                    <li class="list-group-item">
+                                        <b>Total shipments</b> <a class="pull-right">10</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Total Invoice value</b> <a class="pull-right">20</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Wallet balance</b> <a class="pull-right">50</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                        <!-- About Me Box -->
+                        <!-- /.box -->
+                    </div>
+                    <!-- /.col -->
+
+                    <div class="col-md-9">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#profile" data-toggle="tab" aria-expanded="true">Profile</a></li>
+                                <li><a href="#accountinfo" data-toggle="tab" aria-expanded="true">Account Info</a></li>
+                                <li><a href="#pickupinfo" data-toggle="tab" aria-expanded="true">Pickup Info</a></li>
+
+                            </ul>
+                            <div class="tab-content">
+
+                                <!-- /.tab-pane -->
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane active" id="profile">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Name</td>
+                                                    <td>@ViewBag.UserInfo.username</td>
+                                                    @Html.Hidden("userid", (object)ViewBag.UserInfo.userid)
+                                                    @Html.Hidden("username", (object)ViewBag.UserInfo.username)
+                                                    @Html.Hidden("emailid", (object)ViewBag.UserInfo.emailid)
+                                                    @Html.Hidden("phoneno", (object)ViewBag.UserInfo.phoneno)
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Email</td>
+                                                    <td>@ViewBag.UserInfo.emailid</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Phone</td>
+                                                    <td>@ViewBag.UserInfo.phoneno</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Password</td>
+                                                    <td><input type="password" value="@ViewBag.UserInfo.password" class="form-control profile-textbox" min="3" disabled id="new_pwd" name="new_pwd" required /></td>
+                                                    @Html.Hidden("password", (object)ViewBag.UserInfo.password)
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#pwd_reset">Reset</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Upload company logo (700*700)</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.imagefile, new { type = "file" })</td>
+                                                    <td><input type="button" class="btn btn-primary btn-sm" id="upload" value="Upload" /></td>
+                                                </tr>
+                                            </table><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="accountinfo">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Company Name</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.companyname, new { @class = "form-control profile-textbox", @name = "companyname", @id = "companyname" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">GST</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.gst, new { @class = "form-control profile-textbox", @name = "gst", @id = "gst" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Bank Account Name</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.accname, new { @class = "form-control profile-textbox", @name = "accname", @id = "accname" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Bank Account No</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.accno, new { @class = "form-control profile-textbox", @name = "accno", @id = "accno" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">IFSC</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.ifsc, new { @class = "form-control profile-textbox", @name = "ifsc", @id = "ifsc" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Branch</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.branch, new { @class = "form-control profile-textbox", @name = "branch", @id = "branch" })</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="pickupinfo">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Warehouse Name</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.warehousename, new { @class = "form-control profile-textbox", @name = "warehousename", @id = "warehousename" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Address</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.address, new { @class = "form-control profile-textbox", @name = "address", @id = "address" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">LandMark</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.landmark, new { @class = "form-control profile-textbox", @name = "landmark", @id = "landmark" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Pincode</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.pincode, new { @class = "form-control profile-textbox", @name = "pincode", @id = "pincode" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">City</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.city, new { @class = "form-control profile-textbox", @name = "city", @id = "city" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">State</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.state, new { @class = "form-control profile-textbox", @name = "state", @id = "state" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:30%;text-align: right;vertical-align: middle;">Contact No</td>
+                                                    <td>@Html.TextBoxFor(Model => Model.contactno, new { @class = "form-control profile-textbox", @name = "contactno", @id = "contactno" })</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-primary" name="submit" value="save" />
+                                <!-- /.tab-pane -->
+                            </div>
+                            <!-- /.tab-content -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            }
+        </section>
+        <!-- /.content -->
+
+        <div class="modal fade" id="new_warehouse_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">New Warehouse</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Pickup address 1</td>
+                                        <td>
+                                            <input type="text" v-validate="'required'" v-model="house.pickup_address1" name="pickup_address1" class="form-control"></input>
+                                            <span v-if="errors.has('pickup_address1')" style="color:red;">{{errors.first('pickup_address1')}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Pickup address 2</td>
+                                        <td>
+                                            <input type="text" class="form-control" v-validate="'required'" name="pickup_address2" v-model="house.pickup_address2"></input>
+                                            <span v-if="errors.has('pickup_address2')" style="color:red;">{{errors.first('pickup_address2')}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Landmark</td>
+                                        <td>
+                                            <input type="text" class="form-control" v-validate="'required'" name="landmark" v-model="house.landmark"></input>
+                                            <span v-if="errors.has('landmark')" style="color:red;">{{errors.first('landmark')}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Pickup phone</td>
+                                        <td>
+                                            <input type="text" class="form-control" v-validate="'required|digits:10'" name="pickup_phone" v-model="house.pickup_phone"></input>
+                                            <span v-if="errors.has('pickup_phone')" style="color:red;">{{errors.first('pickup_phone')}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Pickup email</td>
+                                        <td>
+                                            <input type="text" class="form-control" v-validate="'email|required'" name="pickup_email" v-model="house.pickup_email"></input>
+                                            <span v-if="errors.has('pickup_email')" style="color:red;">{{errors.first('pickup_email')}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Pincode</td>
+                                        <td>
+                                            <input type="text" class="form-control" v-validate="'required|digits:6'" name="pincode" v-model="house.pincode"></input>
+                                            <span v-if="errors.has('pincode')" style="color:red;">{{errors.first('pincode')}}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p id="msg" style="float:left;"></p>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary pull-left" v-on:click="add_warehouse_exe()">Save</button>
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="pwd_reset">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Password Reset</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">New Password</td>
+                                        <td>
+                                            <input type="password" id="newpassword" name="newpassword" class="form-control profile-textbox" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;text-align: right;vertical-align: middle;">Confirm Password</td>
+                                        <td>
+                                            <input type="password" class="form-control profile-textbox" id="confirmpassword" name="confirmpassword" />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p id="msg" style="float:left;"></p>
+                        <button type="button" class="btn btn-primary pull-left" id="updatepassword">Update Password</button>
+                        <button type="button" class="btn btn-primary pull-left" id="resetpassword">Reset</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+
+
+        <div class="modal fade" id="profile_update">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Update profile</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <form action="<?php echo base_url(); ?>Home/update_profile" method="post" enctype="multipart/form-data">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td style="width:30%;text-align: right;vertical-align: middle;">Company Name</td>
+                                            <td>
+                                                <input type="text" v-model="house.company_name" name="company_name" class="form-control"></input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;text-align: right;vertical-align: middle;">Company address</td>
+                                            <td>
+                                                <input type="text" class="form-control" name="company_address" v-model="house.company_address"></input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;text-align: right;vertical-align: middle;">Type of products</td>
+                                            <td>
+                                                <input type="text" class="form-control" name="type_of_products" v-model="house.type_of_products"></input>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="width:30%;text-align: right;vertical-align: middle;">Kyc (adhar card or license copy)</td>
+                                            <td>
+                                                <input type="file" class="form-control" name="kyc" v-model="house.kyc" id="kyc"></input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;text-align: right;vertical-align: middle;">Company logo</td>
+                                            <td><input type="file" class="form-control" name="logo" v-model="house.logo" id="logo"></input></td>
+
+                                        </tr>
+
+                                    </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p id="msg" style="float:left;"></p>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary pull-left" v-on:click="update_profile()">Save</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="checkout_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Checkout</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <center><p>For each extra warehouse need to pay</p></center>
+                                <center><h4>Rs.200</h4></center>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary pull-left" v-on:click="create_warehouse()">checkout</button>
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /.content-wrapper -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/src/loadingoverlay.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/extras/loadingoverlay_progress/loadingoverlay_progress.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+
+                doc: '',
+
+                errors: []
+            },
+
+
+
+            methods: {
+
+                processFile: function (event) {
+
+                    this.someData = event.target.files[0]
+
+                    console.log(this.someData);
+                },
+
+                upload: function () {
+
+                    var formData = new FormData();
+                    var imagefile = document.querySelector('#file');
+                    formData.append("image", imagefile.files[0]);
+
+                    if (imagefile.files[0] == null) {
+
+                        set_alert('Error :', 'Please upload Valid .csv file', 'danger');
+
+                    } else {
+
+                        $(".wrapper").LoadingOverlay("show");
+
+                        axios.post('<?php echo base_url(); ?>Home/upload_shipment_file', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(response => {
+
+
+
+                            if (response.data[0]['msg'] == "success") {
+
+                                console.log(response.data);
+
+                                app.errors = "";
+
+
+                                set_alert('Success :', 'All Shipments are verified and uploaded successfully', 'success');
+
+                            } else {
+
+                                set_alert('Warning :', 'Please check all logs showing below, Please upload after corrections.', 'warning');
+
+                                console.log(response.data);
+
+                                app.errors = response.data[0];
+
+                            }
+
+                            $(".wrapper").LoadingOverlay("hide");
+
+
+
+                            console.log(imagefile.files[0]);
+                        })
+                            .catch(e => {
+                                this.errors.push(e)
+                            })
+
+                    }
+
+
+
+
+                }
+            }
+
+
+        })
+
+
+    })</script>
+<script type="text/javascript" src="~/Scripts/profile_container.js"></script>
+<script type="text/javascript" src="~/Scripts/Common.js"></script>
